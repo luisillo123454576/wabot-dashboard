@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import supabase from '../../../../lib/supabase'
 import Link from 'next/link'
-import { ArrowLeft, MessageSquare, User, Pencil } from 'lucide-react'
+import { ArrowLeft, MessageSquare, User, Pencil, ShoppingBag } from 'lucide-react'
 
 export default function NegocioPage() {
   const { id } = useParams()
@@ -63,14 +63,19 @@ export default function NegocioPage() {
             <h1 className="text-3xl font-bold">{business?.name}</h1>
             <p className="text-zinc-400 text-sm mt-1">{business?.business_type}</p>
           </div>
-          <Link href={`/dashboard/negocio/${id}/editar`} className="ml-auto bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-xl text-sm flex items-center gap-2 transition-colors">
-            <Pencil size={14} />
-            Editar
-          </Link>
+          <div className="ml-auto flex items-center gap-3">
+            <Link href={`/dashboard/negocio/${id}/ordenes`} className="bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-xl text-sm flex items-center gap-2 transition-colors">
+              <ShoppingBag size={14} />
+              Órdenes
+            </Link>
+            <Link href={`/dashboard/negocio/${id}/editar`} className="bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-xl text-sm flex items-center gap-2 transition-colors">
+              <Pencil size={14} />
+              Editar
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-3 gap-6">
-          {/* Lista de clientes */}
           <div className="bg-zinc-900 rounded-2xl border border-zinc-800">
             <div className="p-4 border-b border-zinc-800 flex items-center gap-2">
               <User size={16} className="text-green-400" />
@@ -93,7 +98,6 @@ export default function NegocioPage() {
             </div>
           </div>
 
-          {/* Conversación */}
           <div className="col-span-2 bg-zinc-900 rounded-2xl border border-zinc-800 flex flex-col">
             <div className="p-4 border-b border-zinc-800 flex items-center gap-2">
               <MessageSquare size={16} className="text-green-400" />
