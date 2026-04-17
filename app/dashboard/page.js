@@ -8,8 +8,10 @@ export default function Dashboard() {
   const [businesses, setBusinesses] = useState([])
   const [stats, setStats] = useState({ messages: 0, customers: 0, businesses: 0 })
   const [loading, setLoading] = useState(true)
-
+  
   useEffect(() => {
+    console.log('URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+    console.log('KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
     async function loadData() {
       const { data: businessData } = await supabase
         .from('businesses')
