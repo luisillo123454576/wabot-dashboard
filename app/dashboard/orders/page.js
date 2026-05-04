@@ -1,5 +1,11 @@
 'use client'
 import { useEffect, useState } from 'react'
+import supabase from '../../lib/supabase'
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+)
 
 const STATE_COLORS = {
   PENDIENTE:      'bg-yellow-100 text-yellow-700',
@@ -19,8 +25,34 @@ export default function Orders() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadOrders()
-  }, [filter])
+  const businessId = localStorage.getItem('wabot_business_id')
+  
+  // Carga inicial
+  loadOrders()
+
+  // Supabase Realtime
+  const channel = supabase
+    .channel('orders-realtime')
+    .on(
+      'postgres_changes',
+      {
+        event: '*', // INSERT, UPDATE, DELETE
+        schema: 'public',
+        table: 'orders',
+        filter: `business_id=eq.${businessId}`
+      },
+      (payload) => {
+        console.log('🔄 Cambio en orders:', payload)
+        loadOrders() // Recargar lista completa
+      }
+    )
+    .subscribe()
+
+  // Cleanup al desmontar
+  return () => {
+    supabase.removeChannel(channel)
+  }
+}, [filter])
 
   async function loadOrders() {
     setLoading(true)
